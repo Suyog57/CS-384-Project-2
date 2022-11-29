@@ -10,6 +10,7 @@ from openpyxl import Workbook
 
 
 def tut4(of):
+    print('fuck')
     u = of['U']  # assigning a list to columns of input file
     v = of['V']
     w = of['W']
@@ -551,6 +552,7 @@ def tut5(of, f, poss, mod=5000):
 
 
 def tut7(f):
+    print('f')
     opdir = 'output'  # forming the output directory if not present
     if not os.path.exists(opdir):
         os.makedirs(opdir)
@@ -558,111 +560,109 @@ def tut7(f):
     # for f in files:
         # if ('input/' + f)[-4:] == 'xlsx':
         # reading the input file
-        df = pd.read_excel(f)
-        of = df
+    df = pd.read_excel(f)
+    of = df
+    print('f')
 
-        u = of['U']
-        num = 2 + int(len(u) / mod) + bool(len(u) // mod)
+    u = of['U']
+    num = 2 + int(len(u) / mod) + bool(len(u) // mod)
 
-        # calling the required functions
-        poss = []
-        tut5(of, f, poss, mod)
-        tut2(of, mod)
-        cnt = int(tut4(of))
+    # calling the required functions
+    poss = []
+    tut5(of, f, poss, mod)
+    tut2(of, mod)
+    cnt = int(tut4(of))
 
-        heads = []
-        c = 33
-        while c <= 43:
-            if c != 35:
-                heads.append(c)
-            c = c+1
+    heads = []
+    c = 33
+    while c <= 43:
+        if c != 35:
+            heads.append(c)
+        c = c+1
 
-        # forming a dataframe in openpyxl from pandas dataframes
-        wb = Workbook()
-        sheet = wb.active
-        for r in dataframe_to_rows(df, index=False, header=True):
-            sheet.append(r)
+    # forming a dataframe in openpyxl from pandas dataframes
+    wb = Workbook()
+    sheet = wb.active
+    for r in dataframe_to_rows(df, index=False, header=True):
+        sheet.append(r)
 
-        yellow = "00FFFF00"
+    yellow = "00FFFF00"
 
-        # coloring and bordering the required cells using openpxyl's
-        # patternfill and border function
-        for i in range(len(poss)):
-            c = cols[poss[i][0]]
-            r = int(poss[i][1]+2)
-            sheet.cell(row=r, column=c).fill = PatternFill(
-                patternType="solid", fgColor=yellow)
+    # coloring and bordering the required cells using openpxyl's
+    # patternfill and border function
+    for i in range(len(poss)):
+        c = cols[poss[i][0]]
+        r = int(poss[i][1]+2)
+        sheet.cell(row=r, column=c).fill = PatternFill(
+            patternType="solid", fgColor=yellow)
 
-        for i in range(len(heads)):
-            sheet.cell(row=1, column=heads[i]).value = ' '
+    for i in range(len(heads)):
+        sheet.cell(row=1, column=heads[i]).value = ' '
 
-        c = 14
-        borcol = []
-        while c <= 32:
-            borcol.append(c)
-            c = c+1
+    c = 14
+    borcol = []
+    while c <= 32:
+        borcol.append(c)
+        c = c+1
 
-        black = '000000'
-        thin_border = Border(left=Side(style='thin', color=black),
-                                right=Side(style='thin', color=black),
-                                top=Side(style='thin', color=black),
-                                bottom=Side(style='thin', color=black))
+    black = '000000'
+    thin_border = Border(left=Side(style='thin', color=black),
+                            right=Side(style='thin', color=black),
+                            top=Side(style='thin', color=black),
+                            bottom=Side(style='thin', color=black))
+    for i in range(len(borcol)):
+        for j in range(num):
+            sheet.cell(row=j+1, column=borcol[i]).border = thin_border
+
+    for i in range(9):
+        sheet.cell(row=num + 2 + i, column=29).border = thin_border
+        sheet.cell(row=num + i + 2, column=30).border = thin_border
+        sheet.cell(row=num + i + 2, column=31).border = thin_border
+
+    borcol = []
+    c = 35
+    while c <= 43:
+        borcol.append(c)
+        c = c+1
+
+    ran = int(len(u)/mod)+bool(len(u) % mod)+1
+    row = 0
+    for k in range(ran):
+        row = row+2
         for i in range(len(borcol)):
-            for j in range(num):
-                sheet.cell(row=j+1, column=borcol[i]).border = thin_border
+            for j in range(9):
+                sheet.cell(
+                    row=row+1+j, column=borcol[i]).border = thin_border
+        row = row+12
 
+    c = 44
+    while c <= 46:
+        c = c+1
         for i in range(9):
-            sheet.cell(row=num + 2 + i, column=29).border = thin_border
-            sheet.cell(row=num + i + 2, column=30).border = thin_border
-            sheet.cell(row=num + i + 2, column=31).border = thin_border
+            sheet.cell(row=i + 1, column=c).border = thin_border
 
-        borcol = []
-        c = 35
-        while c <= 43:
-            borcol.append(c)
-            c = c+1
+    for i in range(cnt+1):
+        sheet.cell(row=1 + i, column=49).border = thin_border
+        sheet.cell(row=i+1, column=50).border = thin_border
+        sheet.cell(row=i+1, column=51).border = thin_border
 
-        ran = int(len(u)/mod)+bool(len(u) % mod)+1
-        row = 0
-        for k in range(ran):
-            row = row+2
-            for i in range(len(borcol)):
-                for j in range(9):
-                    sheet.cell(
-                        row=row+1+j, column=borcol[i]).border = thin_border
-            row = row+12
-
-        c = 44
-        while c <= 46:
-            c = c+1
-            for i in range(9):
-                sheet.cell(row=i + 1, column=c).border = thin_border
-
-        for i in range(cnt+1):
-            sheet.cell(row=1 + i, column=49).border = thin_border
-            sheet.cell(row=i+1, column=50).border = thin_border
-            sheet.cell(row=i+1, column=51).border = thin_border
-
-        # forming the required output file by saving openpyxl dataframe
-        wb.save(f + '_octant_analysis_mod_' + str(mod) + '.xlsx')
-
-
-
-
-
-
+    # forming the required output file by saving openpyxl dataframe
+    wb.save(os.path.join(
+            opdir, f.name[0:-4] + '_octant_analysis_mod_' + str(mod) + '.xlsx'))
 
 st.title('Get output file of CS384-2022 tut-7 for free')
-f = st.file_uploader('Upload your input file in xlsx format',accept_multiple_files=True)
-# print(f)
+f = st.file_uploader('Upload your input file in xlsx format', accept_multiple_files=True)
+
 mod=0
 if f is not None:
     mod=int(st.number_input('Please enter mod value'))
     if mod!=0:
-        st.button('Compute')
-        tut7(f)        
+        
+        if st.button('Compute'):
+            for files in f:
+                print(files.name)
+                tut7(files)        
+            
     else:
         st.warning('Mod cannot be zero', icon='🥱')
-    # tut7(f)
-    # st.title('Please enter excel file only')
-
+    
