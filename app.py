@@ -550,10 +550,10 @@ def tut5(of, f, poss, mod=5000):
 
 
 
-
+opdir = 'output'
 def tut7(f):
     print('f')
-    opdir = 'output'  # forming the output directory if not present
+      # forming the output directory if not present
     if not os.path.exists(opdir):
         os.makedirs(opdir)
 
@@ -652,6 +652,7 @@ def tut7(f):
 
 st.title('Get output file of CS384-2022 tut-7 for free')
 f = st.file_uploader('Upload your input file in xlsx format', accept_multiple_files=True)
+from zipfile import ZipFile
 
 mod=0
 if f is not None:
@@ -666,3 +667,16 @@ if f is not None:
     else:
         st.warning('Mod cannot be zero', icon='🥱')
     
+opdir="output"
+for files in os.listdir(opdir):
+    print(files)
+    st.download_button("Download "+(files), os.path.join(opdir,files), file_name=files)
+
+
+# with ZipFile('my_python_files.zip','w') as zip:
+#     # writing each file one by one
+#     opdir="output"
+#     for file in opdir:
+#         zip.write(file)
+
+# print('All files zipped successfully!') 
