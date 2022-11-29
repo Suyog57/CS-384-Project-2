@@ -25,7 +25,6 @@ from openpyxl import Workbook
 #         ("Standard (5-15 days)", "Express (2-5 days)")
 #     )
 def tut4(of):
-    print('fuck')
     u = of['U']  # assigning a list to columns of input file
     v = of['V']
     w = of['W']
@@ -567,7 +566,6 @@ def tut5(of, f, poss, mod=5000):
 
 opdir = 'output'
 def tut7(f):
-    print('f')
       # forming the output directory if not present
     if not os.path.exists(opdir):
         os.makedirs(opdir)
@@ -577,7 +575,6 @@ def tut7(f):
         # reading the input file
     df = pd.read_excel(f)
     of = df
-    print('f')
 
     u = of['U']
     num = 2 + int(len(u) / mod) + bool(len(u) // mod)
@@ -679,18 +676,27 @@ if f is not None:
     if mod!=0:
         
         if st.button('Compute'):
+            cnt=100/len(f)
+            num=0
+            bar=st.progress(num)
             for files in f:
-                print(files.name)
+                num+=cnt
+                bar.progress(int(num))
+                # print(files.name)
                 tut7(files)        
             
     else:
         st.warning('Mod cannot be zero', icon='🥱')
     
+st.title('')
+st.write('Output files ready for download👇')
 opdir="output"
 for files in os.listdir(opdir):
-    print(files)
+    # print(files)
     st.download_button("Download "+(files), os.path.join(opdir,files), file_name=files)
 
+st.title('')
+st.write("Thank us later✌")
 
 # with ZipFile('my_python_files.zip','w') as zip:
 #     # writing each file one by one
