@@ -7,8 +7,23 @@ import openpyxl
 from openpyxl.styles import PatternFill, Border, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl import Workbook
+# [theme]
+# primaryColor = "#E694FF"
+# backgroundColor = "#00172B"
+# secondaryBackgroundColor = "#0083B8"
+# textColor = "#C6CDD4"
+# font = "sans-serif"
+# add_selectbox = st.sidebar.selectbox(
+#     "How would you like to be contacted?",
+#     ("Email", "Home phone", "Mobile phone")
+# )
 
-
+# Using "with" notation
+# with st.sidebar:
+#     add_radio = st.radio(
+#         "Choose a shipping method",
+#         ("Standard (5-15 days)", "Express (2-5 days)")
+#     )
 def tut4(of):
     print('fuck')
     u = of['U']  # assigning a list to columns of input file
@@ -651,7 +666,11 @@ def tut7(f):
             opdir, f.name[0:-4] + '_octant_analysis_mod_' + str(mod) + '.xlsx'))
 
 st.title('Get output file of CS384-2022 tut-7 for free')
-f = st.file_uploader('Upload your input file in xlsx format', accept_multiple_files=True)
+f=[]
+
+f = st.sidebar.file_uploader('Upload your input file in xlsx format', accept_multiple_files=True
+)
+# f = st.file_uploader('Upload your input file in xlsx format', accept_multiple_files=True)
 from zipfile import ZipFile
 
 mod=0
