@@ -685,12 +685,16 @@ if f is not None:
                 flag = 1
                 cnt = 100/len(f)
                 num = 0
+                st.write('')
                 bar = st.progress(num)
+                latest_iteration = st.empty()
+                latest_iteration.text(f'{round(num,2)}%/100.00%')
                 for files in f:
                     num += cnt
                     # print(files.name)
                     tut7(files)
                     bar.progress(int(num))
+                    latest_iteration.text(f'{round(num,2)}%/100.00%')
             else:
                 st.write('Please upload input files!!!')
 
