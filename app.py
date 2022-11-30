@@ -1,8 +1,9 @@
+from zipfile import ZipFile
 import streamlit as st
 from platform import python_version
 import os
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, date
 import openpyxl
 from openpyxl.styles import PatternFill, Border, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
@@ -24,6 +25,8 @@ from openpyxl import Workbook
 #         "Choose a shipping method",
 #         ("Standard (5-15 days)", "Express (2-5 days)")
 #     )
+
+
 def tut4(of):
     u = of['U']  # assigning a list to columns of input file
     v = of['V']
@@ -392,7 +395,7 @@ def tut5(of, f, poss, mod=5000):
                               "2": "External Ejection", "-2": "Internal Ejection",
                               "3": "External inward interaction", "-3": "Internal inward interaction",
                               "4": "Internal sweep", "-4": "External sweep"}
-    
+
     u = of['U']  # assigning a list to columns of input file
     v = of['V']
     w = of['W']
@@ -411,13 +414,14 @@ def tut5(of, f, poss, mod=5000):
     w_ = []
 
     for i in u:
-        u_.append(round(i - au, 3))  # pushing the element at the end of list using append
+        # pushing the element at the end of list using append
+        u_.append(round(i - au, 3))
     for i in v:
         v_.append(round(i - av, 3))
     for i in w:
         w_.append(round(i - aw, 3))
 
-    # filling the remaining spaces in the column with blank space using extend 
+    # filling the remaining spaces in the column with blank space using extend
     avgu.extend([''] * (len(u) - 1))
     avgv.extend([''] * (len(u) - 1))
     avgw.extend([''] * (len(u) - 1))
@@ -514,8 +518,8 @@ def tut5(of, f, poss, mod=5000):
     cnt = {}
     for i in octs:
         cnt[i] = 0
-    
-    #loop to calculate rank of each octant for each mod range and assignment of the values
+
+    # loop to calculate rank of each octant for each mod range and assignment of the values
     for i in range(num):
         seq = []
         for j in octs:
@@ -548,25 +552,26 @@ def tut5(of, f, poss, mod=5000):
         rank[j] = cnt[i]
         j = j + 1
 
-    #count of each octant in each mod range
+    # count of each octant in each mod range
     for i in octs:
         values[i].extend([''] * (len(u_) - len(values[i])))
         of[str(i)] = values[i]
-    
-    #rank columns of each octant
+
+    # rank columns of each octant
     for i in octs:
         ranks[i].extend([''] * (len(u_) - len(ranks[i])))
         of['Rank Octant ' + str(i)] = ranks[i]
 
-    #forming the output columns
+    # forming the output columns
     of['Rank1 Octant ID'] = rank
     of['Rank1 Octant Name'] = name
 
 
-
 opdir = 'output'
+
+
 def tut7(f):
-      # forming the output directory if not present
+    # forming the output directory if not present
     if not os.path.exists(opdir):
         os.makedirs(opdir)
 
@@ -619,9 +624,9 @@ def tut7(f):
 
     black = '000000'
     thin_border = Border(left=Side(style='thin', color=black),
-                            right=Side(style='thin', color=black),
-                            top=Side(style='thin', color=black),
-                            bottom=Side(style='thin', color=black))
+                         right=Side(style='thin', color=black),
+                         top=Side(style='thin', color=black),
+                         bottom=Side(style='thin', color=black))
     for i in range(len(borcol)):
         for j in range(num):
             sheet.cell(row=j+1, column=borcol[i]).border = thin_border
@@ -660,43 +665,52 @@ def tut7(f):
 
     # forming the required output file by saving openpyxl dataframe
     wb.save(os.path.join(
-            opdir, f.name[0:-4] + '_octant_analysis_mod_' + str(mod) + '.xlsx'))
+            opdir, f.name[0:-4] + '_octant_analysis_mod_' + str(mod) + '_'+str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S")) + '.xlsx'))
+
 
 st.title('Get output file of CS384-2022 tut-7 for free')
-f=[]
+f = []
 
 f = st.sidebar.file_uploader('Upload your input file in xlsx format', accept_multiple_files=True
-)
+                             )
 # f = st.file_uploader('Upload your input file in xlsx format', accept_multiple_files=True)
-from zipfile import ZipFile
-
-mod=0
+flag = 0
+mod = 0
 if f is not None:
-    mod=int(st.number_input('Please enter mod value'))
-    if mod!=0:
-        
+    mod = int(st.number_input('Please enter mod value'))
+    if mod != 0:
+
         if st.button('Compute'):
-            cnt=100/len(f)
-            num=0
-            bar=st.progress(num)
-            for files in f:
-                num+=cnt
-                bar.progress(int(num))
-                # print(files.name)
-                tut7(files)        
-            
+            if len(f)!=0:
+                flag = 1
+                cnt = 100/len(f)
+                num = 0
+                bar = st.progress(num)
+                for files in f:
+                    num += cnt
+                    # print(files.name)
+                    tut7(files)
+                    bar.progress(int(num))
+            else:
+                st.write('Please upload input files!!!')
+
     else:
         st.warning('Mod cannot be zero', icon='🥱')
-    
-st.title('')
-st.write('Output files ready for download👇')
-opdir="output"
-for files in os.listdir(opdir):
-    # print(files)
-    st.download_button("Download "+(files), os.path.join(opdir,files), file_name=files)
 
 st.title('')
-st.write("Thank us later✌")
+if flag == 1:
+    st.write('Output files ready for download👇')
+opdir = "output"
+
+if os.path.exists(opdir):
+    for files in os.listdir(opdir):
+        # print(files)
+        st.download_button("Download "+(files),
+                           os.path.join(opdir, files), file_name=files)
+
+st.title('')
+if flag == 1:
+    st.write("Thank us later✌")
 
 # with ZipFile('my_python_files.zip','w') as zip:
 #     # writing each file one by one
@@ -704,4 +718,4 @@ st.write("Thank us later✌")
 #     for file in opdir:
 #         zip.write(file)
 
-# print('All files zipped successfully!') 
+# print('All files zipped successfully!')
