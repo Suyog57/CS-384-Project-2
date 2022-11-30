@@ -707,10 +707,13 @@ if flag == 1:
 opdir = "output"
 
 if os.path.exists(opdir):
-    for files in os.listdir(opdir):
+    for item in os.listdir(opdir):
         # print(files)
-        st.download_button("Download "+(files),
-                           os.path.join(opdir, files), file_name=files)
+        df=pd.read_excel(os.path.join("output",item))
+        with open(os.path.join("output",item), 'rb') as my_file:
+            st.download_button(label = 
+            'Download '+item, data = my_file, file_name = item)
+
 
 st.title('')
 if flag == 1:
